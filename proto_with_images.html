@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#1a3a4a">
-  <title>프레지던트 메이커 - 개표 시뮬레이터</title>
+  <title>President Maker - Vote Counting Simulator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;800&display=swap" rel="stylesheet">
@@ -20,69 +20,69 @@
   <!-- 화면1: 핵심지지층 입력 -->
   <section id="screen1" class="eh-screen">
     <div class="screen-container">
-      <img src="Resources/files/리소스/1단계_핵심지지층/Background.png" class="bg-image" alt="배경">
+      <img src="Resources/files/리소스/1단계_핵심지지층/Background.png" class="bg-image" alt="background">
 
       <div class="main-panel panel-1">
-        <img src="Resources/files/리소스/1단계_핵심지지층/new_background.png" class="panel-bg" alt="패널">
+        <img src="Resources/files/리소스/1단계_핵심지지층/new_background.png" class="panel-bg" alt="panel">
 
         <div class="notice-header">
-          <img src="Resources/files/리소스/1단계_핵심지지층/Title_icon.png" class="title-icon" alt="아이콘">
+          <img src="Resources/files/리소스/1단계_핵심지지층/Title_icon.png" class="title-icon" alt="icon">
           <div class="notice-text">
-            <h2>핵심 지지층 수를 <span class="highlight">입력</span>해주세요</h2>
-            <p class="hint"><img src="Resources/files/리소스/1단계_핵심지지층/Red_icon.png" class="hint-icon" alt="별"> 군소 후보 단일화 여부를 표시해주세요</p>
+            <h2>Please <span class="highlight">enter</span> the number of core supporters</h2>
+            <p class="hint"><img src="Resources/files/리소스/1단계_핵심지지층/Red_icon.png" class="hint-icon" alt="star"> Please indicate if minor candidates have unified</p>
           </div>
         </div>
 
         <div class="candidates-input">
           <!-- Orange -->
           <div class="candidate-row" data-cand="A">
-            <img src="Resources/files/리소스/1단계_핵심지지층/Orange_logo.png" class="cand-logo" alt="주황">
+            <img src="Resources/files/리소스/1단계_핵심지지층/Orange_logo.png" class="cand-logo" alt="orange">
             <div class="bar-container">
               <div class="eh-bar" data-key="A" data-min="1" data-max="9">
                 <div class="bar-images"></div>
               </div>
             </div>
             <button class="unify-btn" data-cand="A" aria-pressed="false">
-              <img src="Resources/files/리소스/1단계_핵심지지층/Red_icon.png" alt="단일화">
+              <img src="Resources/files/리소스/1단계_핵심지지층/Red_icon.png" alt="unify">
             </button>
           </div>
 
           <!-- Purple -->
           <div class="candidate-row" data-cand="B">
-            <img src="Resources/files/리소스/1단계_핵심지지층/Purple_logo.png" class="cand-logo" alt="보라">
+            <img src="Resources/files/리소스/1단계_핵심지지층/Purple_logo.png" class="cand-logo" alt="purple">
             <div class="bar-container">
               <div class="eh-bar" data-key="B" data-min="1" data-max="9">
                 <div class="bar-images"></div>
               </div>
             </div>
             <button class="unify-btn" data-cand="B" aria-pressed="false">
-              <img src="Resources/files/리소스/1단계_핵심지지층/Red_icon.png" alt="단일화">
+              <img src="Resources/files/리소스/1단계_핵심지지층/Red_icon.png" alt="unify">
             </button>
           </div>
 
           <!-- Green -->
           <div class="candidate-row" data-cand="C">
-            <img src="Resources/files/리소스/1단계_핵심지지층/Green_logo.png" class="cand-logo" alt="초록">
+            <img src="Resources/files/리소스/1단계_핵심지지층/Green_logo.png" class="cand-logo" alt="green">
             <div class="bar-container">
               <div class="eh-bar" data-key="C" data-min="1" data-max="9">
                 <div class="bar-images"></div>
               </div>
             </div>
             <button class="unify-btn" data-cand="C" aria-pressed="false">
-              <img src="Resources/files/리소스/1단계_핵심지지층/Red_icon.png" alt="단일화">
+              <img src="Resources/files/리소스/1단계_핵심지지층/Red_icon.png" alt="unify">
             </button>
           </div>
 
           <!-- White -->
           <div class="candidate-row" data-cand="D">
-            <img src="Resources/files/리소스/1단계_핵심지지층/White_logo.png" class="cand-logo" alt="흰색">
+            <img src="Resources/files/리소스/1단계_핵심지지층/White_logo.png" class="cand-logo" alt="white">
             <div class="bar-container">
               <div class="eh-bar" data-key="D" data-min="1" data-max="9">
                 <div class="bar-images"></div>
               </div>
             </div>
             <button class="unify-btn" data-cand="D" aria-pressed="false">
-              <img src="Resources/files/리소스/1단계_핵심지지층/Red_icon.png" alt="단일화">
+              <img src="Resources/files/리소스/1단계_핵심지지층/Red_icon.png" alt="unify">
             </button>
           </div>
         </div>
@@ -95,26 +95,26 @@
   <!-- 화면2: 지역 선택 -->
   <section id="screen2" class="eh-screen" hidden>
     <div class="screen-container">
-      <img src="Resources/files/리소스/1단계_핵심지지층/Background.png" class="bg-image" alt="배경">
+      <img src="Resources/files/리소스/1단계_핵심지지층/Background.png" class="bg-image" alt="background">
 
       <div class="main-panel panel-2">
-        <img src="Resources/files/리소스/2단계_지역선택/new_background.png" class="panel-bg" alt="패널">
+        <img src="Resources/files/리소스/2단계_지역선택/new_background.png" class="panel-bg" alt="panel">
 
         <div class="notice-header">
-          <img src="Resources/files/리소스/1단계_핵심지지층/Title_icon.png" class="title-icon" alt="아이콘">
+          <img src="Resources/files/리소스/1단계_핵심지지층/Title_icon.png" class="title-icon" alt="icon">
           <div class="notice-text">
-            <h2>개표를 진행할 지역을 선택해 주세요</h2>
-            <p class="hint">서울/경기는 지역은 가장 마지막에 진행됩니다</p>
+            <h2>Please select a region for vote counting</h2>
+            <p class="hint">Seoul/Gyeonggi region is counted last</p>
           </div>
         </div>
 
         <div class="region-selection">
           <div class="left-section">
             <div class="progress-board">
-              <img id="notice-bg-image" src="Resources/files/리소스/2단계_지역선택/new_notice1.png" class="notice-bg" alt="배경">
-              <img id="board-bg-image" src="Resources/files/리소스/2단계_지역선택/Board_background_1.png" class="board-bg" alt="보드">
+              <img id="notice-bg-image" src="Resources/files/리소스/2단계_지역선택/new_notice1.png" class="notice-bg" alt="background">
+              <img id="board-bg-image" src="Resources/files/리소스/2단계_지역선택/Board_background_1.png" class="board-bg" alt="board">
             </div>
-            <div id="round-instruction" class="round-instruction">1번 위치의 지역을 선택해주세요</div>
+            <div id="round-instruction" class="round-instruction">Please select the region for position 1</div>
           </div>
 
           <div id="region-grid" class="region-grid">
@@ -130,16 +130,16 @@
   <!-- 화면3: 지역 지지도 입력 -->
   <section id="screen3" class="eh-screen" hidden>
     <div class="screen-container">
-      <img src="Resources/files/리소스/1단계_핵심지지층/Background.png" class="bg-image" alt="배경">
+      <img src="Resources/files/리소스/1단계_핵심지지층/Background.png" class="bg-image" alt="background">
 
       <div class="main-panel panel-3">
-        <img src="Resources/files/리소스/3단계_지역수치입력/new_background1.png" class="panel-bg" id="screen3-bg" alt="패널">
+        <img src="Resources/files/리소스/3단계_지역수치입력/new_background1.png" class="panel-bg" id="screen3-bg" alt="panel">
 
         <!-- Notice 헤더 -->
         <div class="notice-header">
-          <img src="Resources/files/리소스/1단계_핵심지지층/Title_icon.png" class="title-icon" alt="아이콘">
+          <img src="Resources/files/리소스/1단계_핵심지지층/Title_icon.png" class="title-icon" alt="icon">
           <div class="notice-text">
-            <h2>선택한 지역의 <span class="highlight">관심도</span> 및 <span class="highlight">지지자 규모</span>를 입력해주세요</h2>
+            <h2>Please enter the <span class="highlight">engagement level</span> and <span class="highlight">supporter count</span> for the selected region</h2>
           </div>
         </div>
 
@@ -147,8 +147,8 @@
         <div class="screen3-content">
           <!-- 왼쪽: 지역 정보 -->
           <div class="region-info-box">
-            <img src="Resources/files/리소스/3단계_지역수치입력/Notice_background.png" class="region-notice-bg" alt="배경">
-            <img id="region-image" src="" alt="지역" class="region-img-3">
+            <img src="Resources/files/리소스/3단계_지역수치입력/Notice_background.png" class="region-notice-bg" alt="background">
+            <img id="region-image" src="" alt="region" class="region-img-3">
           </div>
 
           <!-- 오른쪽: 입력 영역 -->
@@ -190,21 +190,21 @@
   <!-- 화면4: 개표 -->
   <section id="screen4" class="eh-screen" hidden>
     <div class="screen-container">
-      <img src="Resources/files/리소스/1단계_핵심지지층/Background.png" class="bg-image" alt="배경">
+      <img src="Resources/files/리소스/1단계_핵심지지층/Background.png" class="bg-image" alt="background">
 
       <div class="main-panel panel-4">
-        <img src="Resources/files/리소스/4단계_지역 개표/new_background.png" class="panel-bg panel-4-bg" alt="패널">
+        <img src="Resources/files/리소스/4단계_지역 개표/new_background.png" class="panel-bg panel-4-bg" alt="panel">
 
         <div class="notice-header">
-          <img src="Resources/files/리소스/1단계_핵심지지층/Title_icon.png" class="title-icon" alt="아이콘">
+          <img src="Resources/files/리소스/1단계_핵심지지층/Title_icon.png" class="title-icon" alt="icon">
           <div class="notice-text">
-            <h2>개표를 진행합니다!</h2>
+            <h2>Vote counting in progress!</h2>
           </div>
         </div>
 
         <div class="counting-area">
           <div class="bag-section">
-            <img id="region-box" src="" alt="지역 주머니" class="region-box">
+            <img id="region-box" src="" alt="region bag" class="region-box">
           </div>
 
           <!-- 중앙 애니메이션 영역 -->
@@ -212,10 +212,10 @@
 
           <div class="draw-actions">
             <button id="draw1" class="draw-btn">
-              <img src="Resources/files/리소스/4단계_지역 개표/Button.png" alt="개표하기">
+              <img src="Resources/files/리소스/4단계_지역 개표/Button.png" alt="count votes">
             </button>
             <div class="remain-info">
-              남은 개표 횟수 <b id="remain-draws">0</b>/<span id="total-draws">0</span>
+              Remaining draws <b id="remain-draws">0</b>/<span id="total-draws">0</span>
             </div>
             <div id="bag-remain-display" class="bag-remain-display"></div>
           </div>
@@ -223,10 +223,10 @@
 
         <!-- 득표 미플들 (절대 위치) -->
         <div class="tally-meeples-container">
-          <img id="meeple-A" class="tally-meeple-absolute" src="Resources/files/리소스/1단계_핵심지지층/Orange_meeple.png" alt="주황 미플">
-          <img id="meeple-B" class="tally-meeple-absolute" src="Resources/files/리소스/1단계_핵심지지층/Purple_meeple.png" alt="보라 미플">
-          <img id="meeple-C" class="tally-meeple-absolute" src="Resources/files/리소스/1단계_핵심지지층/Green_meeple.png" alt="초록 미플">
-          <img id="meeple-D" class="tally-meeple-absolute" src="Resources/files/리소스/1단계_핵심지지층/White_meeple.png" alt="흰색 미플">
+          <img id="meeple-A" class="tally-meeple-absolute" src="Resources/files/리소스/1단계_핵심지지층/Orange_meeple.png" alt="orange meeple">
+          <img id="meeple-B" class="tally-meeple-absolute" src="Resources/files/리소스/1단계_핵심지지층/Purple_meeple.png" alt="purple meeple">
+          <img id="meeple-C" class="tally-meeple-absolute" src="Resources/files/리소스/1단계_핵심지지층/Green_meeple.png" alt="green meeple">
+          <img id="meeple-D" class="tally-meeple-absolute" src="Resources/files/리소스/1단계_핵심지지층/White_meeple.png" alt="white meeple">
         </div>
 
         <div id="log-container" class="log-area" style="display:none;">
@@ -239,10 +239,10 @@
   <!-- 화면5: 최종 결과 -->
   <section id="screen5" class="eh-screen" hidden>
     <div class="screen-container">
-      <img src="Resources/files/리소스/1단계_핵심지지층/Background.png" class="bg-image" alt="배경">
+      <img src="Resources/files/리소스/1단계_핵심지지층/Background.png" class="bg-image" alt="background">
 
       <div class="main-panel panel-5">
-        <img id="winner-bg" src="" class="panel-bg" alt="패널">
+        <img id="winner-bg" src="" class="panel-bg" alt="panel">
 
         <button id="view-stats" class="transparent-stats-btn"></button>
       </div>
@@ -252,10 +252,10 @@
   <!-- 화면6: 통계 -->
   <section id="screen6" class="eh-screen" hidden>
     <div class="screen-container">
-      <img src="Resources/files/리소스/1단계_핵심지지층/Background.png" class="bg-image" alt="배경">
+      <img src="Resources/files/리소스/1단계_핵심지지층/Background.png" class="bg-image" alt="background">
 
       <div class="main-panel panel-6">
-        <img id="stats-bg" src="" class="panel-bg" alt="패널">
+        <img id="stats-bg" src="" class="panel-bg" alt="panel">
 
         <div class="stats-content">
           <!-- 서울경기 -->
@@ -1090,6 +1090,7 @@
     align-items: center;
     flex-wrap: wrap;
     margin-top: 6px;
+    margin-right: -85px;
   }
 
   .bag-remain-item {
@@ -1479,7 +1480,7 @@
   .stat-rate {
     font-size: 13px;
     font-weight: 700;
-    color: #5f7a8a;
+    color: #e53935;
     line-height: 1;
   }
 
@@ -1759,7 +1760,7 @@
 
 
   $('#to2').addEventListener('click', () => {
-    if (!confirm('다음 단계로 넘어가시겠습니까?')) {
+    if (!confirm('Proceed to the next step?')) {
       return;
     }
     C.forEach(k => state.baseTally[k] = state.coreSupport[k]|0);
@@ -1795,9 +1796,9 @@
     const othersLeft = remaining.some(x => x !== '서울경기');
 
     if (othersLeft) {
-      instruction.textContent = `${doneCount + 1}번 위치의 지역을 선택해주세요`;
+      instruction.textContent = `Please select the region for position ${doneCount + 1}`;
     } else {
-      instruction.textContent = '서울 경기 지역을 선택해주세요';
+      instruction.textContent = 'Please select the Seoul/Gyeonggi region';
     }
 
     // 지역 버튼 생성
@@ -1973,10 +1974,10 @@
       img.src = cand.logo;
       img.alt = cand.name;
 
-      // E후보(군소) 아이콘은 70% 크기로 조정
+      // E후보(군소) 아이콘은 22% 크기로 조정
       if (cand.key === 'E') {
-        img.style.width = '70%';
-        img.style.height = '70%';
+        img.style.width = '22%';
+        img.style.height = '22%';
       }
 
       const countSpan = document.createElement('span');
@@ -1998,16 +1999,16 @@
     const interestBar = $('#interest-bar');
     const interestMarker = interestBar.querySelector('.marker-overlay');
     if (!interestMarker) {
-      alert('관심도를 선택해 주세요.');
+      alert('Please select the engagement level.');
       return;
     }
 
     // 모든 후보자의 지지도 미플 존재 확인
     const candidateNames = {
-      'A': '진보',
-      'B': '보수',
-      'C': '중도',
-      'D': '무소속'
+      'A': 'Orange',
+      'B': 'Purple',
+      'C': 'Green',
+      'D': 'White'
     };
 
     const supportBars = $$('.support-row .support-bar');
@@ -2016,7 +2017,7 @@
       const meeple = bar.querySelector('.marker-overlay');
       if (!meeple) {
         const cand = ['A', 'B', 'C', 'D'][i];
-        alert(`${candidateNames[cand]} 후보의 지지도를 선택해 주세요.`);
+        alert(`Please select the support level for the ${candidateNames[cand]} candidate.`);
         return;
       }
     }
@@ -2260,8 +2261,8 @@
     // 개표 횟수는 무제한 (동점자 표가 나올 때까지)
     state.drawsRemain = 999;
 
-    $('#remain-draws').textContent = '추가개표';
-    $('#total-draws').textContent = '진행중';
+    $('#remain-draws').textContent = 'Runoff';
+    $('#total-draws').textContent = 'In Progress';
 
     updateBagRemainDisplay();
 
@@ -2344,7 +2345,7 @@
 
         if (winners.length > 1) {
           // 동점 발생
-          alert('동점자가 발생하여 추가개표를 진행합니다.');
+          alert('A tie has occurred. Additional vote counting will proceed.');
           removeOverlay();
           animArea.innerHTML = '';
           startRunoff(winners);
@@ -2634,6 +2635,24 @@
     document.addEventListener('click', enableFullscreen, { once: true });
     document.addEventListener('touchstart', enableFullscreen, { once: true });
   }
+
+  // ===== 디버깅 헬퍼: 빨간 아이콘 크기 조정 =====
+  window.redIconSize = function(percent) {
+    const bagDisplay = $('#bag-remain-display');
+    if (!bagDisplay) {
+      console.log('❌ 개표 화면(화면4)에서 실행해주세요.');
+      return;
+    }
+    const redIcon = bagDisplay.querySelector('img[alt="Red"]');
+    if (!redIcon) {
+      console.log('❌ 빨간 아이콘을 찾을 수 없습니다.');
+      return;
+    }
+    redIcon.style.width = percent + '%';
+    redIcon.style.height = percent + '%';
+    console.log(`✅ 빨간 아이콘 크기: ${percent}%`);
+    console.log(`💡 적용하려면 코드에서 1978-1979 라인의 70%를 ${percent}%로 변경하세요.`);
+  };
 
   // ===== 디버깅 헬퍼: 도움말 =====
   window.도움말 = function() {
