@@ -2324,9 +2324,20 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
+      transition: transform 0.2s;
+      pointer-events: none;
     `;
 
-    finishBtn.appendChild(finishImg);
+    overlay.appendChild(finishImg);
+    overlay.appendChild(finishBtn);
+
+    // 호버 효과
+    finishBtn.addEventListener('mouseenter', () => {
+      finishImg.style.transform = 'scale(1.05)';
+    });
+    finishBtn.addEventListener('mouseleave', () => {
+      finishImg.style.transform = 'scale(1)';
+    });
 
     // 오버레이 제거 함수
     function removeOverlay() {
