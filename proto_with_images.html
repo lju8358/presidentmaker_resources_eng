@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -310,6 +310,12 @@
             <div class="stat-card rank3"></div>
             <div class="stat-card rank4"></div>
             <div class="region-turnout"></div>
+          </div>
+
+          <!-- 군소후보 -->
+          <div class="minor-candidate-stats">
+            <div class="minor-votes">0</div>
+            <div class="minor-rate">0.0%</div>
           </div>
         </div>
 
@@ -1513,12 +1519,12 @@
   }
 
   /* 각 지역별 투표율 위치 */
-  .seoul-stats .region-turnout { bottom: 22px; right: -368px; }
-  .gangwon-stats .region-turnout { bottom: 22px; right: -363px; }
+  .seoul-stats .region-turnout { bottom: 23px; right: -418px; }
+  .gangwon-stats .region-turnout { bottom: 25px; right: -356px; }
   .chungcheong-stats .region-turnout { bottom: 23px; right: -364px; }
-  .gyeongsang-stats .region-turnout { bottom: 24px; right: -366px; }
-  .jeolla-stats .region-turnout { bottom: 21px; right: -361px; }
-  .national-stats .region-turnout { bottom: 17px; right: -463px; }
+  .gyeongsang-stats .region-turnout { bottom: 21px; right: -380px; }
+  .jeolla-stats .region-turnout { bottom: 23px; right: -358px; }
+  .national-stats .region-turnout { bottom: 9px; right: -468px; }
 
   /* 각 지역 위치 */
   .seoul-stats {
@@ -1537,8 +1543,8 @@
   }
 
   .gyeongsang-stats {
-    top: 55.0%;
-    left: 73.7%;
+    top: 53.2%;
+    left: 72.1%;
   }
 
   .jeolla-stats {
@@ -1549,6 +1555,31 @@
   .national-stats {
     top: 73.6%;
     left: 60.3%;
+  }
+
+  /* 군소후보 스타일 */
+  .minor-candidate-stats {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    bottom: 6%;
+    left: 49%;
+    font-family: 'GmarketSans', sans-serif;
+  }
+
+  .minor-votes {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1a3a4a;
+    line-height: 1;
+  }
+
+  .minor-rate {
+    font-size: 15px;
+    font-weight: 700;
+    color: #e53935;
+    line-height: 1;
   }
 
   .transparent-back-btn {
@@ -1653,6 +1684,7 @@
     runoffMode:false,
     runoffCandidates:[],
     regionResults:{}, // 지역별 득표 결과
+    minorVotes:0, // 군소후보(E) 득표수
   };
   REGIONS.forEach(r=>{ state.regionData[r]={interest:0, support:{A:0,B:0,C:0,D:0}}; });
 
@@ -1674,12 +1706,14 @@
 
       const tallyValue = state.tally[k];
 
-      // 25칸 (0~24) 중 현재 득표수 위치로 이동
+      // 32칸 (0~31) 중 현재 득표수 위치로 이동
       // 컨테이너 내에서 상대적 위치 계산
-      if (tallyValue >= 0 && tallyValue <= 24) {
+      // 31표 초과시에도 득표수는 계속 기록되며, 미플은 31 위치에 고정
+      const displayValue = Math.min(tallyValue, 31);
+      if (displayValue >= 0) {
         // 조정 가능한 값들 (브라우저 콘솔에서 window.meepleConfig로 실시간 변경 가능)
-        const config = window.meepleConfig || { 간격: 3.3, 시작위치: 1.5 };
-        const leftPosition = (tallyValue * config.간격) + config.시작위치;
+        const config = window.meepleConfig || { 간격: 3.3, 시작위치: -1.8 };
+        const leftPosition = (displayValue * config.간격) + config.시작위치;
         meeple.style.left = `${leftPosition}%`;
       }
     });
@@ -2057,6 +2091,7 @@
 
   function credit(k) {
     if (k === 'E') {
+      state.minorVotes += 1; // 군소후보 득표수 증가 (단일화 여부와 무관)
       if (state.unify) {
         state.regionAcc[state.unify] += 1;
         return `E→${CAND_NAMES[state.unify]}`;
@@ -2261,7 +2296,7 @@
     // 개표 횟수는 무제한 (동점자 표가 나올 때까지)
     state.drawsRemain = 999;
 
-    $('#remain-draws').textContent = 'Runoff';
+    $('#remain-draws').textContent = 'Additional counting';
     $('#total-draws').textContent = 'In Progress';
 
     updateBagRemainDisplay();
@@ -2467,7 +2502,7 @@
           votes: votes,
           rate: rate
         };
-      }).sort((a, b) => b.votes - a.votes);
+      }).sort((a, b) => b.votes - a.votes || b.rate - a.rate);
 
       // 투표율 계산: 개표회수 / 주머니 내부 표의 총개수
       const totalVotesDrawn = C.reduce((sum, k) => sum + (results[k] || 0), 0);
@@ -2522,7 +2557,7 @@
         votes: votes,
         rate: rate
       };
-    }).sort((a, b) => b.votes - a.votes);
+    }).sort((a, b) => b.votes - a.votes || b.rate - a.rate);
 
     // 전국 투표율 계산
     let nationalTotalDrawn = 0;
@@ -2559,6 +2594,15 @@
       if (turnoutEl) {
         turnoutEl.textContent = `${nationalTurnout.toFixed(1)}%`;
       }
+    }
+
+    // 군소후보 표시 (분모는 5 = 지역 수)
+    const minorContainer = $('.minor-candidate-stats');
+    if (minorContainer) {
+      const minorVotes = state.minorVotes;
+      const minorRate = (minorVotes / 5 * 100);
+      minorContainer.querySelector('.minor-votes').textContent = minorVotes;
+      minorContainer.querySelector('.minor-rate').textContent = `${minorRate.toFixed(1)}%`;
     }
   }
 
@@ -2875,6 +2919,16 @@
   window.경상위치 = function(top, left) { 통계위치조정('경상', top, left); };
   window.전라위치 = function(top, left) { 통계위치조정('전라', top, left); };
   window.전국위치 = function(top, left) { 통계위치조정('전국', top, left); };
+
+  // 군소후보 위치 조정
+  window.군소후보위치 = function(bottom, left) {
+    const container = document.querySelector('.minor-candidate-stats');
+    if (container) {
+      if (bottom !== undefined) container.style.bottom = bottom + '%';
+      if (left !== undefined) container.style.left = left + '%';
+      console.log(`✅ 군소후보 위치: bottom=${bottom}%, left=${left}%`);
+    }
+  };
 
   // 통계 칸 크기 조정
   window.통계크기조정 = function(rank1Size, rank234Size) {
@@ -3442,7 +3496,7 @@
 
   console.log('%c디버깅 도구 로드됨!', 'color: green; font-size: 16px; font-weight: bold;');
   console.log('\n=== 미플 위치 조정 ===');
-  console.log('  미플위치조정(간격, 시작위치) - 현재: 미플위치조정(3.3, 1.5)');
+  console.log('  미플위치조정(간격, 시작위치) - 현재: 미플위치조정(3.3, -1.8)');
   console.log('  컨테이너조정(left, bottom, width, height) - 현재: 컨테이너조정(6, 7.5, 88, 32)');
   console.log('  미플세로조정(A, B, C, D) - 현재: 미플세로조정(22, 39, 56, 73)');
   console.log('  컨테이너테두리(true/false) - 예: 컨테이너테두리(true)');
@@ -3455,6 +3509,7 @@
   console.log('  경상위치(top, left) - 현재: 경상위치(43.5, 74)');
   console.log('  전라위치(top, left) - 현재: 전라위치(65.5, 6)');
   console.log('  전국위치(top, left) - 현재: 전국위치(63, 55)');
+  console.log('  군소후보위치(bottom, left) - 현재: 군소후보위치(6, 49)');
   console.log('  통계크기조정(rank1크기, rank234크기) - 현재: 통계크기조정(110, 70)');
   console.log('  통계페이지(색상) - 통계 페이지로 바로 이동 (예: 통계페이지("green"))');
   console.log('  통계드래그모드(true/false) - 박스 위치 드래그 조정');
