@@ -1658,6 +1658,30 @@
   const $ = (sel, el=root)=> el.querySelector(sel);
   const $$ = (sel, el=root)=> el.querySelectorAll(sel);
 
+  // ===== Audio Setup =====
+  const clickSound = new Audio('Resources/files/리소스/Click.wav');
+  const fanfareSound = new Audio('Resources/files/리소스/Fanfare.mp3');
+  clickSound.preload = 'auto';
+  fanfareSound.preload = 'auto';
+
+  function playClickSound() {
+    clickSound.currentTime = 0;
+    clickSound.play().catch(() => {});
+  }
+
+  function playFanfareSound() {
+    fanfareSound.currentTime = 0;
+    fanfareSound.play().catch(() => {});
+  }
+
+  // Play sound on button clicks (event delegation)
+  document.addEventListener('click', (e) => {
+    const target = e.target.closest('button, .bar-segment, .region-btn, .unify-btn, .draw-btn, .grid-cell');
+    if (target) {
+      playClickSound();
+    }
+  });
+
   const C = ['A','B','C','D'];
   const CAND_NAMES = {A:'진보', B:'보수', C:'중도', D:'무소속'};
   const REGIONS = ['전라','경상','강원','충청','서울경기'];
@@ -1685,6 +1709,8 @@
     runoffCandidates:[],
     regionResults:{}, // 지역별 득표 결과
     minorVotes:0, // 군소후보(E) 득표수
+    regionMinorAcc:0, // 현재 지역 E표 누적
+    fanfarePlayed:false, // 팡파레 재생 여부
   };
   REGIONS.forEach(r=>{ state.regionData[r]={interest:0, support:{A:0,B:0,C:0,D:0}}; });
 
@@ -2092,6 +2118,7 @@
   function credit(k) {
     if (k === 'E') {
       state.minorVotes += 1; // 군소후보 득표수 증가 (단일화 여부와 무관)
+      state.regionMinorAcc += 1; // 현재 지역 E표 누적
       if (state.unify) {
         state.regionAcc[state.unify] += 1;
         return `E→${CAND_NAMES[state.unify]}`;
@@ -2210,12 +2237,15 @@
         C.forEach(k => {
           state.regionResults[state.currentRegion][k] = state.regionAcc[k];
         });
+        // E표(군소후보) 득표도 저장
+        state.regionResults[state.currentRegion].E = state.regionMinorAcc;
 
         // 현재 지역의 득표를 baseTally에 누적하고 regionAcc 초기화
         C.forEach(k => {
           state.baseTally[k] += state.regionAcc[k];
           state.regionAcc[k] = 0;
         });
+        state.regionMinorAcc = 0; // E표 누적도 초기화
 
         const remaining = REGIONS.filter(r => !state.regionsDone.includes(r));
 
@@ -2461,6 +2491,12 @@
       winnerBg.src = `Resources/files/리소스/5단계_당선/background_${colorMap[winners[0]]}.png`;
     }
 
+    // Play fanfare on election result (once only)
+    if (!state.fanfarePlayed) {
+      playFanfareSound();
+      state.fanfarePlayed = true;
+    }
+
     show('#screen5');
   }
 
@@ -2505,10 +2541,11 @@
       }).sort((a, b) => b.votes - a.votes || b.rate - a.rate);
 
       // 투표율 계산: 개표회수 / 주머니 내부 표의 총개수
-      const totalVotesDrawn = C.reduce((sum, k) => sum + (results[k] || 0), 0);
+      // E표(군소후보) 득표도 포함
+      const totalVotesDrawn = C.reduce((sum, k) => sum + (results[k] || 0), 0) + (results.E || 0);
       let totalVotesInBag = C.reduce((sum, k) => sum + (regionData.support[k] || 0), 0);
 
-      // E표(1개)도 유권자에 포함
+      // E표(1개)도 주머니에 포함
       totalVotesInBag += 1;
 
       const turnout = totalVotesInBag > 0 ? (totalVotesDrawn / totalVotesInBag * 100) : 0;
@@ -2563,15 +2600,17 @@
     let nationalTotalDrawn = 0;
     let nationalTotalBag = 0;
     REGIONS.forEach(region => {
-      const results = state.regionResults[region] || {A:0, B:0, C:0, D:0};
+      const results = state.regionResults[region] || {A:0, B:0, C:0, D:0, E:0};
       const regionData = state.regionData[region];
       C.forEach(k => {
         nationalTotalDrawn += results[k] || 0;
         nationalTotalBag += regionData.support[k] || 0;
       });
+      // E표(군소후보) 득표도 포함
+      nationalTotalDrawn += results.E || 0;
     });
 
-    // E표(지역 수만큼)도 유권자에 포함
+    // E표(지역 수만큼)도 주머니에 포함
     nationalTotalBag += REGIONS.length;
 
     const nationalTurnout = nationalTotalBag > 0 ? (nationalTotalDrawn / nationalTotalBag * 100) : 0;
@@ -2761,6 +2800,13 @@
   투표율크기(region, fontSize)        투표율 글자 크기 (px)
   투표율드래그모드(enable)            드래그 모드 (true/false)
 
+📌 군소후보 (화면6)
+────────────────────────────────────────
+  군소후보위치(bottom, left)          위치 조정 (% 단위)
+  군소후보크기(votesSize, rateSize)   득표수/득표율 글자 크기 (px)
+  군소후보현재값()                    현재 설정값 출력
+  군소후보드래그모드(enable)          드래그 모드 (true/false)
+
 💡 지역명: '서울경기', '강원', '충청', '경상', '전라', '전국'
 💡 rank: 'rank1', 'rank2', 'rank3', 'rank4'
 `);
@@ -2927,6 +2973,142 @@
       if (bottom !== undefined) container.style.bottom = bottom + '%';
       if (left !== undefined) container.style.left = left + '%';
       console.log(`✅ 군소후보 위치: bottom=${bottom}%, left=${left}%`);
+    }
+  };
+
+  // 군소후보 크기 조정
+  window.군소후보크기 = function(votesSize, rateSize) {
+    const votesEl = document.querySelector('.minor-votes');
+    const rateEl = document.querySelector('.minor-rate');
+    if (votesEl && votesSize !== undefined) {
+      votesEl.style.fontSize = votesSize + 'px';
+      console.log(`✅ 군소후보 득표수 크기: ${votesSize}px`);
+    }
+    if (rateEl && rateSize !== undefined) {
+      rateEl.style.fontSize = rateSize + 'px';
+      console.log(`✅ 군소후보 득표율 크기: ${rateSize}px`);
+    }
+  };
+
+  // 군소후보 현재값 출력
+  window.군소후보현재값 = function() {
+    const container = document.querySelector('.minor-candidate-stats');
+    const votesEl = document.querySelector('.minor-votes');
+    const rateEl = document.querySelector('.minor-rate');
+
+    if (container) {
+      // inline style이 있으면 그것을, 없으면 CSS 원본값 표시
+      const inlineBottom = container.style.bottom;
+      const inlineLeft = container.style.left;
+      console.log('📋 군소후보 현재 설정:');
+      console.log(`  컨테이너 bottom: ${inlineBottom || '(CSS 기본값: 6%)'}`);
+      console.log(`  컨테이너 left: ${inlineLeft || '(CSS 기본값: 49%)'}`);
+    }
+    if (votesEl) {
+      const computedStyle = getComputedStyle(votesEl);
+      console.log(`  득표수 fontSize: ${votesEl.style.fontSize || computedStyle.fontSize}`);
+    }
+    if (rateEl) {
+      const computedStyle = getComputedStyle(rateEl);
+      console.log(`  득표율 fontSize: ${rateEl.style.fontSize || computedStyle.fontSize}`);
+    }
+  };
+
+  // 군소후보 드래그 모드 (top/left 사용)
+  window.군소후보드래그모드 = function(enable = true) {
+    const container = document.querySelector('.minor-candidate-stats');
+    if (!container) return;
+
+    if (enable) {
+      container.style.border = '2px dashed red';
+      container.style.cursor = 'move';
+
+      const mouseDown = (e) => {
+        dragState.isDragging = true;
+        dragState.element = container;
+        dragState.startX = e.clientX;
+        dragState.startY = e.clientY;
+
+        const rect = container.getBoundingClientRect();
+        const parentRect = container.offsetParent.getBoundingClientRect();
+
+        // 현재 위치를 top/left 퍼센트로 계산
+        dragState.startTop = ((rect.top - parentRect.top) / parentRect.height) * 100;
+        dragState.startLeft = ((rect.left - parentRect.left) / parentRect.width) * 100;
+
+        // bottom 스타일 제거하고 top으로 전환
+        container.style.bottom = 'auto';
+
+        e.preventDefault();
+      };
+
+      container._minorDragMouseDown = mouseDown;
+      container.addEventListener('mousedown', mouseDown);
+
+      // 마우스 이동 핸들러
+      const mouseMove = (e) => {
+        if (dragState.isDragging && dragState.element === container) {
+          const parentRect = container.offsetParent.getBoundingClientRect();
+          const deltaX = e.clientX - dragState.startX;
+          const deltaY = e.clientY - dragState.startY;
+
+          const newTop = dragState.startTop + (deltaY / parentRect.height * 100);
+          const newLeft = dragState.startLeft + (deltaX / parentRect.width * 100);
+
+          container.style.top = newTop + '%';
+          container.style.left = newLeft + '%';
+        }
+      };
+
+      document._minorDragMouseMove = mouseMove;
+      document.addEventListener('mousemove', mouseMove);
+
+      // 마우스업 핸들러
+      const mouseUp = () => {
+        if (dragState.isDragging && dragState.element === container) {
+          dragState.isDragging = false;
+          const top = parseFloat(container.style.top).toFixed(1);
+          const left = parseFloat(container.style.left).toFixed(1);
+          console.log(`✅ CSS 수정: top: ${top}%; left: ${left}%;`);
+          console.log(`✅ 또는 콘솔: 군소후보위치Top(${top}, ${left})`);
+          dragState.element = null;
+        }
+      };
+
+      document._minorDragMouseUp = mouseUp;
+      document.addEventListener('mouseup', mouseUp);
+
+      console.log('✅ 군소후보 드래그 모드 활성화 - 빨간 테두리를 드래그하세요');
+      console.log('💡 드래그 후 top/left 값이 출력됩니다');
+    } else {
+      container.style.border = 'none';
+      container.style.cursor = 'default';
+
+      if (container._minorDragMouseDown) {
+        container.removeEventListener('mousedown', container._minorDragMouseDown);
+        delete container._minorDragMouseDown;
+      }
+      if (document._minorDragMouseMove) {
+        document.removeEventListener('mousemove', document._minorDragMouseMove);
+        delete document._minorDragMouseMove;
+      }
+      if (document._minorDragMouseUp) {
+        document.removeEventListener('mouseup', document._minorDragMouseUp);
+        delete document._minorDragMouseUp;
+      }
+
+      console.log('✅ 군소후보 드래그 모드 비활성화');
+    }
+  };
+
+  // 군소후보 위치 조정 (top/left 버전)
+  window.군소후보위치Top = function(top, left) {
+    const container = document.querySelector('.minor-candidate-stats');
+    if (container) {
+      container.style.bottom = 'auto';
+      if (top !== undefined) container.style.top = top + '%';
+      if (left !== undefined) container.style.left = left + '%';
+      console.log(`✅ 군소후보 위치: top=${top}%, left=${left}%`);
     }
   };
 
