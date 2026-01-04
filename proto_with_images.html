@@ -1661,8 +1661,14 @@
   // ===== Audio Setup =====
   const clickSound = new Audio('Resources/files/리소스/Click.wav');
   const fanfareSound = new Audio('Resources/files/리소스/Fanfare.mp3');
+  const countSound = new Audio('Resources/files/리소스/count.MP3');
+  const countCompleteSound = new Audio('Resources/files/리소스/count_complete.MP3');
   clickSound.preload = 'auto';
   fanfareSound.preload = 'auto';
+  countSound.preload = 'auto';
+  countCompleteSound.preload = 'auto';
+  countSound.volume = 0.8;
+  countCompleteSound.volume = 0.8;
 
   function playClickSound() {
     clickSound.currentTime = 0;
@@ -1674,10 +1680,23 @@
     fanfareSound.play().catch(() => {});
   }
 
+  function playCountSound() {
+    countSound.currentTime = 0;
+    countSound.play().catch(() => {});
+  }
+
+  function playCountCompleteSound() {
+    countCompleteSound.currentTime = 0;
+    countCompleteSound.play().catch(() => {});
+  }
+
   // Play sound on button clicks (event delegation)
   document.addEventListener('click', (e) => {
     const target = e.target.closest('button, .bar-segment, .region-btn, .unify-btn, .draw-btn, .grid-cell');
-    if (target) {
+    // Exclude draw and finish buttons (they have separate sounds)
+    const isDrawBtn = e.target.closest('.draw-btn') || e.target.closest('#draw1');
+    const isFinishBtn = e.target.closest('#finish-overlay');
+    if (target && !isDrawBtn && !isFinishBtn) {
       playClickSound();
     }
   });
@@ -2135,6 +2154,7 @@
     if (state.drawsRemain <= 0 || isAnimating) return;
 
     isAnimating = true;
+    playCountSound(); // Play sound when count button is clicked
     const drawBtn = $('#draw1');
     drawBtn.disabled = true;
     drawBtn.style.opacity = '0.6';
@@ -2417,6 +2437,7 @@
     }
 
     finishBtn.addEventListener('click', () => {
+      playCountCompleteSound(); // Play sound when finish button is clicked
       // 서울경기이고 남은 지역이 없을 때 동점 체크
       if (state.currentRegion === '서울경기' && remaining.length === 0) {
         const max = Math.max(...C.map(k => state.tally[k]));
